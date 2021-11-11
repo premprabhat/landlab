@@ -60,26 +60,17 @@ jobs:
           mamba install --file=requirements.txt
           python setup.py bdist_wheel
 
-      - name: Build source distribution
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          python setup.py sdist
-          twine upload --skip-existing dist/*.tar.gz
-
       - name: Build manylinux Python wheels
         if: matrix.os == 'ubuntu-latest'
         uses: RalfG/python-wheels-manylinux-build@v0.3.3-manylinux2010_x86_64
         with:
           python-versions: ${{ matrix.python_versions }}
           build-requirements: 'cython numpy'
-
-      - name: Upload distributions
-        run: twine upload --skip-existing dist/*-${{ matrix.platform }}*.whl
         
  
   build-and-publish-aarch64:
     name: Build and publish aarch64 wheels to TestPyPI
-    runs-on: ${{ matrix.os }}
+    runs-on: [ubuntu-latest]
 
     defaults:
       run:
